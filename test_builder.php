@@ -16,128 +16,37 @@ session_start(); //Requiring sesssion to enter
     $q_counter = intval($questions_counter);
     $current_test_questions = $_POST['s_questions']; //STRING OF QUESTIONS USED
     $question_IDs = explode(",",$current_test_questions);
+    $done = false;
     
-    
+    if(!empty($questions_counter)){
+      $done = true;
+      $unique_test_id = random_str_generator();
+      $test_info_query = "insert into CS490ExamRecords (test_id, student_id, test_name) values ('$unique_test_id', '$st_ID', '$test_ID')";
+      mysqli_query($db,$test_info_query);
+    }
     //Traverse through each answer and evaluate them individually
     for($i = 0; $i < $q_counter - 1; $i++){
       //Look at current answer
       $answer_ID = "answer" . strval($i + 1);
       $currentAnswer = $_POST[$answer_ID];
+      $currentQuestion = $question_IDs[$i];
      
-      //Run exec here here and push into CS490Answers
-      
-      
-      
-    }
-    
-    
-    //This, so far, has displahyed successfully
-    echo "Student ID: " . $st_ID;
-    echo "<br>";
-    echo "Test ID: " . $test_ID;
-    echo "<br>";
-    echo "Current Test Questions: " . $current_test_questions;
-    echo "<br>";
-    
-    
-    /*
-    //FIRST - Retrieve student_id============================================
-    $st_id = $dataOfUser['id'];
-    
-    
-    //SECOND - Retrieve test_id==============================================
-    $test_name = $_POST["selected_exam"];
-    $query = "SELECT * FROM CS490Tests WHERE tName='$test_name'";
-    $qResult = mysqli_query($db,$query);
-    $qCheck = mysqli_num_rows($qResult);
-    
-    
-    if($qCheck > 0){
-      while($row = mysqli_fetch_assoc($qResult)){
-        $t_id = $row['tID']; //Getting the current test ID
-        $rawQ = $row['tQuestions']; //Getting all the questions
-        $questions = explode(",", $rawQ);
-        //Traverse questions to get corresponding IDs, and record answers as we are traversing.
-        $test_q_number = 1;
-        foreach($questions as $question_ID){
-          //Get student answer
-          $current_stdn_answer = $_POST['answer' . $test_q_number];
-          //Check if the answer is not empty
-          if(!empty($current_stdn_answer)){
-            //Form code with student answer
-            $answer = "#!/usr/bin/env python\n";
-            $answer .= $current_stdn_answer;
-            $answer .= "\n";
-            
-            //Get state cases
-            $query = "SELECT * FROM CS490Questions WHERE qID = '$question_ID' ";
-            $resultQ =  mysqli_query($db,$query);
-            $checkQ = mysqli_num_rows($qResult);
-            if($checkQ > 0){
-              $qRow = mysqli_fetch_assoc($resultQ);
-              $test_case_1 = $qRow['qCase1'];
-              $test_case_2 = $qRow['qCase2'];
-              $case_1_result = $qRow['qResult1'];
-              $case_2_result = $qRow['qResult2'];
-            }
-            
-            //Putting cases into array
-            $allCases = array($case_1_result, $case_2_result);
-            
-            //Append function calls to the code
-            $answer .= $test_case_1;
-            $answer .= "\n";
-            $answer .= $test_case_2; //At this point code is fully formed
-            
-            //Put code into python file
-            file_put_contents("studentCD.py", $answer);
-            
-            //Execute python file and return answers
-            $output = null;
-            $retval = null;
-            exec('python studentCD.py', $output, $retval);
-            
-            //Now evaluate with provided answers
-            $q_answered_correctly = false;
-            if(($output[0] == $allCases[0]) && ($output[1] == $allCases[1])){
-              $q_answer_correctly = true;
-            }
-            
-            $madeScore = 100;
-            //insert information into the table
-            if(!empty($st_id) && !empty($t_id) && !empty($question_ID) && !empty($current_stdn_answer)){
-              if($q_answer_correctly == true){
-                $final_query = "insert into CS490Answers (student_id, test_id, question_id, answer, qScore) values ('$st_id', '$t_id', '$question_ID', '$current_stdn_answer','$madeScore')";
-              }
-              else{
-                $final_query = "insert into CS490Answers (student_id, test_id, question_id, answer, qScore) values ('$st_id', '$t_id', '$question_ID', '$current_stdn_answer','0')";
-              }
-              
-              //Run query
-              mysqli_query($db,$final_query);
-              header("Location: index.php");//Redirecting to the login page adter registration
-              die;
-            }
-            else{
-              echo "One field of required information empty";
-            }
-            
-            
-          }
-        }////////////////////////////////
+      //Insert entry into CS490 Answers
+      if(!empty($st_ID) && !empty($test_ID) && !empty($currentQuestion) && !empty($currentAnswer)){
+        
+        //Query to put answers into CS490Answers
+        $query = "insert into CS490Answers (student_id, test_id, unique_id, question_id, answer) values ('$st_ID', '$test_ID', '$unique_test_id', '$currentQuestion', '$currentAnswer')";
+        //Running query
+        mysqli_query($db,$query);
+      }else{
+        echo "Failed to insert entry.";
       }
       
-    }else{
-      echo "Failed to retrieve test information";
     }
-    //=======================================================================
-    
-    //THIRD - Retrieve Question ID===========================================
-    //Traverse the submitted questions
-    //Acquire answer per question
-    //=======================================================================
-    
-  */
+    if($done){
+      header("Location: index.php");//Redirecting to the login page adter registration
+      die;
+    }
   }
   else{
     echo "ERROR POSTING INFORMATION";

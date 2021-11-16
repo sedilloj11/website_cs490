@@ -38,4 +38,13 @@ function random_id_num($length)
   return $text;
 }
 
+function random_str_generator(){
+  $alpha_num = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $generated_string = "";
+  for($i = 0; $i < 10; $i++){
+    $generated_string .= $alpha_num[rand(0, strlen($alpha_num) - 1)];
+  }
+  return $generated_string;
+}
+
 ?>
