@@ -6,6 +6,11 @@ session_start();
   
   $dataOfUser = isLoggedIn($db); //Check if the user is logged in and store its data into variable
   
+  if($_SERVER['REQUEST_METHOD'] == "POST"){
+    header("Location: grading.php");//Redirecting to the login page adter registration
+    die;
+  }
+  
 ?>
 
 <!DOCTYPE html>
