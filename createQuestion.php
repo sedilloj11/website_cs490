@@ -14,11 +14,13 @@ session_start(); //Requiring sesssion to enter
     $result1 = $_POST['result1'];
     $case2 = $_POST['case2'];
     $result2 = $_POST['result2'];
+	$diff = $_POST['diff'];
+	$type = $_POST['type'];
     
     //Check if variables are not empty
-    if(!empty($question) && !empty($case1) && !empty($result1) && !empty($case2) && !empty($result2)){
+    if(!empty($question) && !empty($case1) && !empty($result1) && !empty($case2) && !empty($result2) && !empty($diff) && !empty($type)){
       //Submit the information to the database with a query
-      $query = "insert into CS490Questions (question, qCase1, qResult1, qCase2, qResult2) values ('$question', '$case1', '$result1', '$case2','$result2')";
+      $query = "insert into CS490Questions (question, difficulty, type, qCase1, qResult1, qCase2, qResult2) values ('$question', '$diff', '$type', '$case1', '$result1', '$case2','$result2')";
       
       //Running query in the database
       mysqli_query($db,$query);
@@ -63,6 +65,21 @@ session_start(); //Requiring sesssion to enter
     
     <label for="result2">Enter first result:</label><br>
     <input type="text" id="result2" name="result2"><br><br>
+	
+	<label for="diff">Select Question Difficulty:</label><br>
+	<select name="diff" id="diff">
+		<option value="easy">Easy</option>
+		<option value="medium">Medium</option>
+		<option value="hard">Hard</option>
+	</select><br><br>
+	
+	<label for="type">Select Question Type:</label><br>
+	<select name="type" id="type">
+		<option value="for">For</option>
+		<option value="while">While</option>
+		<option value="recursion">Recursion</option>
+		<option value="other">Other</option>
+	</select><br><br>
     
     <input type="submit" value="Submit">
   </form>
