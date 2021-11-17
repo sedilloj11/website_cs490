@@ -32,22 +32,56 @@ session_start(); //Requiring sesssion to enter
  
   
     <?php
-      //Retrieving from Database
+      //Retrieving from Database Test Info
       $testID = $_POST["selected_test"];
+      $rCount = 0;
+      echo $testID;
       
-      $query = "SELECT * FROM CS490Answers WHERE unique_id = $testID";
-      $qResult = mysqli_query($db,$query);
-      $qCheck = mysqli_num_rows($qResult);
-      echo $qCheck;
-    
-      while($row = mysqli_fetch_assoc($qResult)){
+      
+      
+      
+      
+      
+      $query = "SELECT * FROM `CS490Answers` WHERE `unique_id` = '$testID'" ;
+      echo "<br>";
+      
+      $result = mysqli_query($db,$query);
+      
+        
+        ///NEEED WORK////
+        //points from cs490 tests
+        $pointsQuery = "SELECT T.`rScores` , T.`tName` FROM `CS490Tests` T, `CS490Answers` A WHERE A.test_id = T.`tID` AND A.`unique_id` = 'MnxEsEqyE6' ";
+        $pointsResult = mysqli_query($db,$pointsQuery);
+        //echo $pointsResult;        
+        $Points = mysqli_fetch_assoc($pointsResult);
+        $P = array($Points);
+        //echo $pointsResult;
+        
+            echo "<form>";
+            echo "<table border='1'>
+          
+            <tr>
+            
+            <th>Question</th>
+            
+            <th>Answer</th>
+            
+            <th>Points</th>
+            
+            <th>Actual Points</th>
+            
+            <th>Comments</th>
+            
+            </tr>";
+     
+      while($row = mysqli_fetch_assoc($result)){
         
         $answer = $row['answer'];
-        $Qid = $row['question id'];
-        echo $row["answer"];
-        echo "<br>";
-        echo $Qid;
-      //Questions pull from CS490Questions using Qid from ^^^ to get 
+        $Qid = $row['question_id'];
+        $Tid = $row['test_id'];
+        //echo "<br>";
+        //echo $Qid;
+      //Questions pull from Test 
         $questQuery = "SELECT * FROM CS490Questions WHERE qID = $Qid";
         $questResult = mysqli_query($db,$questQuery);
         $Q = mysqli_fetch_assoc($questResult);
@@ -56,13 +90,58 @@ session_start(); //Requiring sesssion to enter
         $c1 = $Q['qCase1'];//case1
         $r1 = $Q['qResult1'];//result1
         $c2 = $Q['qCase2'];//case2
-        $c3 = $Q['qResult2'];//result2
+        $r2 = $Q['qResult2'];//result2
+        $cr =array($r1, $r2);
 
-        echo "<br>". $question ."|". $answer." <br>";
-  
+        
+        
+        ///script
+        $script = "#!/usr/bin/env python\n";
+        $script .= $answer;
+        $script .= "\n";
+        $script .= "print(".$c1.")";
+        $script .= "\n";
+        $script .= "print(".$c2.")";
+        $script .= "\n";
+        
+        
+       //write to file and run script
+        $answerFile = "studentCD.py";
+        file_put_contents($answerFile, $script);
+        $output = null;
+        $retval = null;
+        exec('python studentCD.py', $output, $retval);
+        
+        
+        //compare script results with case results
+        $point = 0; 
+        for ($x = 0; $x <2; $x++){
+              if($output[$x] == $cr[$x]){
+                  $point = $point + .5;
+                }
+        }
 
+          echo "<tr>";
+        
+          echo "<td>" . $question . "</td>";
+        
+          echo "<td>" . $answer . "</td>";
+        
+          echo "<td>" . $P[$x] . "</td>";
+          
+          echo "<td><input type='text' id = 'points' name='points' maxlength = '3' size='3' placeholder=" . $point ." ></td>";
+          
+          echo "<td><input type='text' id = 'comments' name='comments' ></td>";
+        
+          echo "</tr>";
+        
 
       }
+      echo "</table>";
+     echo "<input type='submit'v alue='submit'>";
+    echo "</form>";
+    
+    
     ?>
   
   
