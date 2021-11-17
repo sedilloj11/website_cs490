@@ -15,7 +15,7 @@ session_start(); //Requiring sesssion to enter
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Blanck Test</title>
+  <title>Grade Test</title>
     </head>
 
     <body>
@@ -25,7 +25,7 @@ session_start(); //Requiring sesssion to enter
     background-color: #b0aa8c;
   }
   </style>
-  <h1><?php echo $_POST["selected_test"]?></h1><br>
+ 
   
 
   
@@ -35,7 +35,7 @@ session_start(); //Requiring sesssion to enter
       //Retrieving from Database Test Info
       $testID = $_POST["selected_test"];
       $rCount = 0;
-      echo $testID;
+      
       
       
       
@@ -50,13 +50,14 @@ session_start(); //Requiring sesssion to enter
         
         ///NEEED WORK////
         //points from cs490 tests
-        $pointsQuery = "SELECT T.`rScores` , T.`tName` FROM `CS490Tests` T, `CS490Answers` A WHERE A.test_id = T.`tID` AND A.`unique_id` = 'MnxEsEqyE6' ";
-        $pointsResult = mysqli_query($db,$pointsQuery);
-        //echo $pointsResult;        
+        $pointsQuery = "SELECT T.`rScores` , T.`tName` FROM `CS490Tests` T, `CS490Answers` A WHERE A.test_id = T.`tID` AND A.`unique_id` = '$testID' ";
+        $pointsResult = mysqli_query($db,$pointsQuery);        
         $Points = mysqli_fetch_assoc($pointsResult);
         $P = array($Points);
-        //echo $pointsResult;
+        echo "<h2>".$Points['tName']."</h2><br> ";
+        $P = explode(",",$Points['rScores']);
         
+        //start table
             echo "<form>";
             echo "<table border='1'>
           
@@ -68,14 +69,14 @@ session_start(); //Requiring sesssion to enter
             
             <th>Points</th>
             
-            <th>Actual Points</th>
+            <th>Total</th>
             
             <th>Comments</th>
             
             </tr>";
      
       while($row = mysqli_fetch_assoc($result)){
-        
+        $c = 0;
         $answer = $row['answer'];
         $Qid = $row['question_id'];
         $Tid = $row['test_id'];
@@ -119,23 +120,23 @@ session_start(); //Requiring sesssion to enter
               if($output[$x] == $cr[$x]){
                   $point = $point + .5;
                 }
+        ///table contents
         }
-
           echo "<tr>";
         
           echo "<td>" . $question . "</td>";
         
           echo "<td>" . $answer . "</td>";
-        
-          echo "<td>" . $P[$x] . "</td>";
           
-          echo "<td><input type='text' id = 'points' name='points' maxlength = '3' size='3' placeholder=" . $point ." ></td>";
+          echo "<td><input type='text' id = 'points' name='points' maxlength = '3' size='3' placeholder=" . $point * $P[$c] ." ></td>";
+          
+          echo "<td>" . $P[$c] . "</td>";
           
           echo "<td><input type='text' id = 'comments' name='comments' ></td>";
         
           echo "</tr>";
         
-
+          $c++;
       }
       echo "</table>";
      echo "<input type='submit'v alue='submit'>";
