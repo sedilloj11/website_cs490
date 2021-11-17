@@ -27,7 +27,7 @@ session_start();
       <a href="createQuestion.php">Create Question</a><br><br>
       <a href="tests.php">View Tests</a><br><br>
       <a href="createTest.php">Create Test</a><br><br>
-      <a href="manage.php">Manage Scores/Answers</a><br><br>
+      <a href="manage.php">Grade Tests</a><br><br>
       
       <h2><a href = "logout.php">Sign Out</a></h2>
    </body>
