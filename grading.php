@@ -9,6 +9,14 @@ session_start(); //Requiring sesssion to enter
   $dataOfUser = isLoggedIn($db);//Assign information of the student. can retrieve id
   
   
+  if($_SERVER['REQUEST_METHOD'] == "POST"){
+  
+  
+  }
+  
+  
+  
+  
 
 ?>
 
@@ -48,14 +56,20 @@ session_start(); //Requiring sesssion to enter
       $result = mysqli_query($db,$query);
       
         
-        ///NEEED WORK////
+        //Need to do: 
+        //1.Grab Student name
+        //2.submit grade and test to db
+        
+        
+        
         //points from cs490 tests
         $pointsQuery = "SELECT T.`rScores` , T.`tName` FROM `CS490Tests` T, `CS490Answers` A WHERE A.test_id = T.`tID` AND A.`unique_id` = '$testID' ";
         $pointsResult = mysqli_query($db,$pointsQuery);        
         $Points = mysqli_fetch_assoc($pointsResult);
-        $P = array($Points);
+
         echo "<h2>".$Points['tName']."</h2><br> ";
         $P = explode(",",$Points['rScores']);
+        
         
         //start table
             echo "<form>";
@@ -74,9 +88,9 @@ session_start(); //Requiring sesssion to enter
             <th>Comments</th>
             
             </tr>";
-     
+       $c = 0;
       while($row = mysqli_fetch_assoc($result)){
-        $c = 0;
+        
         $answer = $row['answer'];
         $Qid = $row['question_id'];
         $Tid = $row['test_id'];
@@ -139,7 +153,7 @@ session_start(); //Requiring sesssion to enter
           $c++;
       }
       echo "</table>";
-     echo "<input type='submit'v alue='submit'>";
+     echo "<input type='submit'value='submit'>";
     echo "</form>";
     
     
