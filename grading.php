@@ -9,12 +9,46 @@ session_start(); //Requiring sesssion to enter
   $dataOfUser = isLoggedIn($db);//Assign information of the student. can retrieve id
   
   
-  if($_SERVER['REQUEST_METHOD'] == "POST"){
+  ///HANDLING POST FROM FORM
+  $check = ($_POST['done']);
+  if(isset($check)){
+    
+    $tID = $_POST['Tid'];
+    $counter = $_POST['counter'];
   
+  //points per question
+    $allScores = [];
+    $submittedScores = $_POST['points'];
+    foreach($submittedScores as $score){
+        array_push($allScores, $score);
+      
+    }
+   
+    //comments per question
+        $allComments = [];
+    $submittedComments = $_POST['comments'];
+    foreach($submittedComments as $comment){
+        array_push($allComments, $comment);
+    }
+    //questions
+    $questID = [];
+    $submittedQuestions = $_POST['Qid'];
+    foreach($submittedQuestions as $Question){
+             array_push($questID, $Question);
+    }
+    
+    $pointTotal = 0;
+    for($x = 0;$x < $counter;$x++){
+    $queryA = "UPDATE `CS490Answers` SET `comments`='". $allComments[$x] ."',`qScore`= '" . $allScores[$x] . "' WHERE `unique_id` = '". $tID ."' AND `question_id` = '". $questID[$x] ."' ";
+          mysqli_query($db,$queryA);
+          $pointTotal = $pointTotal + $allScores[$x];
+    }
+    $queryT = "UPDATE `CS490ExamRecords` SET `score`= '". $pointTotal . "' WHERE `test_id` = '". $tID ."' ";
+    mysqli_query($db,$queryT);
   
+    header("Location: welcomeAdmin.php");
+    die;
   }
-  
-  
   
   
 
@@ -35,7 +69,9 @@ session_start(); //Requiring sesssion to enter
   </style>
  
   
-
+ <a href="manage.php">Manage</a> | <a href="welcomeAdmin.php">Home</a>
+  
+  
   
  
   
@@ -72,10 +108,12 @@ session_start(); //Requiring sesssion to enter
         
         
         //start table
-            echo "<form>";
-            echo "<table border='1'>
-          
-            <tr>
+            echo "<form method = 'POST'>";
+            echo "<table border='1'>";
+            
+            //POST test uniqueID
+            echo "<input type='hidden'  name='Tid' value='". $testID ."'>";
+          echo"<tr>
             
             <th>Question</th>
             
@@ -142,17 +180,24 @@ session_start(); //Requiring sesssion to enter
         
           echo "<td>" . $answer . "</td>";
           
-          echo "<td><input type='text' id = 'points' name='points' maxlength = '3' size='3' placeholder=" . $point * $P[$c] ." ></td>";
+          echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . $point * $P[$c] ." ></td>";
+          echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
+ 
           
+         
           echo "<td>" . $P[$c] . "</td>";
           
-          echo "<td><input type='text' id = 'comments' name='comments' ></td>";
+          echo "<td><input type='text' id = 'comments".$c."' name='comments[]' ></td>";
+          
+
         
           echo "</tr>";
         
           $c++;
       }
+      echo"<input type='hidden'  name='counter' value=". $c .">";
       echo "</table>";
+    echo"<input type = 'checkbox' name = 'done' id = 'done' value='on'>";
      echo "<input type='submit'value='submit'>";
     echo "</form>";
     
