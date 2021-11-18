@@ -133,7 +133,7 @@ session_start();
       <br>
       <br>
       Password:<br>
-      <input id = "text" type="text" name="password">
+      <input id = "text" type="password" name="password">
       <br>
       <br>
       <input id = "button" type="submit" value="Submit">
