@@ -154,8 +154,8 @@ session_start(); //Requiring sesssion to enter
   <td> 
 	<label for="type">Select Question Type:</label>
 	<select name="type" id="type">
-		<option value="for loop">for loop</option>
-		<option value="while loop">while loop</option>
+		<option value="for">for loop</option>
+		<option value="while">while loop</option>
 		<option value="strings">Strings</option>
 		<option value="conditionals">Conditionals</option>
 		<option value="recursion">Recursion</option>
