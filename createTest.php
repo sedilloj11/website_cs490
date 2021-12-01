@@ -1,4 +1,11 @@
 <?php
+
+
+/////TODO: 
+//ADD SPLIT VIEW DISPLAY OF SELECTED QUESTIONS 
+
+
+
 session_start(); //Requiring session to enter
 
   include("dbConnect.php"); //requires file for connection to database
@@ -110,8 +117,10 @@ session_start(); //Requiring session to enter
 	
 	<label for="type">Filter Question Type:</label><br>
 	<select name="type" id="type">
-		<option value="for">For</option>
-		<option value="while">While</option>
+			<option value="for loop">for loop</option>
+		<option value="while loop">while loop</option>
+		<option value="strings">Strings</option>
+		<option value="conditionals">Conditionals</option>
 		<option value="recursion">Recursion</option>
 		<option value="other">Other</option>
 	</select><br><br>
