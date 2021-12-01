@@ -63,6 +63,15 @@ session_start(); //Requiring sesssion to enter
     <body>
 
   <style type="text/css">
+  .view{
+    margin: auto;
+  background-color: white;
+  width: 50%;
+  border-style: solid;
+  border-width: 3px ;
+ 
+  text-align: ;left;
+  }
   body{
     background-color: #b0aa8c;
   }
@@ -73,7 +82,7 @@ session_start(); //Requiring sesssion to enter
   
   
   
- 
+ <div class = "view">
   
     <?php
       //Retrieving from Database Test Info
@@ -92,9 +101,7 @@ session_start(); //Requiring sesssion to enter
       $result = mysqli_query($db,$query);
       
         
-        //Need to do: 
-        //1.Grab Student name
-        //2.submit grade and test to db
+
         
         
         
@@ -103,7 +110,7 @@ session_start(); //Requiring sesssion to enter
         $pointsResult = mysqli_query($db,$pointsQuery);        
         $Points = mysqli_fetch_assoc($pointsResult);
 
-        echo "<h2>".$Points['tName']."</h2><br> ";
+        echo "<h2>".$Points['tName']."</h2> ";
         $P = explode(",",$Points['rScores']);
         
         
@@ -113,7 +120,7 @@ session_start(); //Requiring sesssion to enter
             
             //POST test uniqueID
             echo "<input type='hidden'  name='Tid' value='". $testID ."'>";
-          echo"<tr>
+            echo"<tr>
             
             <th>Question</th>
             
@@ -132,48 +139,54 @@ session_start(); //Requiring sesssion to enter
         $answer = $row['answer'];
         $Qid = $row['question_id'];
         $Tid = $row['test_id'];
-        //echo "<br>";
-        //echo $Qid;
+//-----------------------Test 'answer' for keyword and topic---------------------------
+
+
+
       //Questions pull from Test 
         $questQuery = "SELECT * FROM CS490Questions WHERE qID = $Qid";
         $questResult = mysqli_query($db,$questQuery);
         $Q = mysqli_fetch_assoc($questResult);
 
         $question = $Q['question'];//question
-        $c1 = $Q['qCase1'];//case1
-        $r1 = $Q['qResult1'];//result1
-        $c2 = $Q['qCase2'];//case2
-        $r2 = $Q['qResult2'];//result2
-        $cr =array($r1, $r2);
 
+        $C = explode(":",$Q['qCase1']);
+        $R = explode(":",$Q['qResult1']);
+     
+ 
         
-        
-        ///script
+        ///script builder
         $script = "#!/usr/bin/env python\n";
         $script .= $answer;
-        $script .= "\n";
-        $script .= "print(".$c1.")";
-        $script .= "\n";
-        $script .= "print(".$c2.")";
-        $script .= "\n";
+        foreach($C as $case){
         
-        
+            $script .= "\n";
+            $script .= "print(". $case .")";
+            $script .= "\n";
+            }
+
        //write to file and run script
         $answerFile = "studentCD.py";
         file_put_contents($answerFile, $script);
         $output = null;
         $retval = null;
         exec('python studentCD.py', $output, $retval);
+  
         
         
         //compare script results with case results
         $point = 0; 
-        for ($x = 0; $x <2; $x++){
-              if($output[$x] == $cr[$x]){
-                  $point = $point + .5;
+        $caseCount = count($C);
+        $PpC = (1 / $caseCount);//PointperCase
+        
+        for ($x = 0; $x < $caseCount; $x++){
+             
+              if($output[$x] == $R[$x]){
+                  $point = $point + $PpC;
+                }
                 }
         ///table contents
-        }
+        
           echo "<tr>";
         
           echo "<td>" . $question . "</td>";
@@ -183,11 +196,11 @@ session_start(); //Requiring sesssion to enter
           echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . $point * $P[$c] ." ></td>";
           echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
  
-          
          
           echo "<td>" . $P[$c] . "</td>";
           
-          echo "<td><input type='text' id = 'comments".$c."' name='comments[]' ></td>";
+          echo "<td><textarea id = 'comments".$c."' name='comments[]' ></textarea></td>";
+        
           
 
         
@@ -197,12 +210,31 @@ session_start(); //Requiring sesssion to enter
       }
       echo"<input type='hidden'  name='counter' value=". $c .">";
       echo "</table>";
-    echo"<input type = 'checkbox' name = 'done' id = 'done' value='on'>";
-     echo "<input type='submit'value='submit'>";
-    echo "</form>";
+      echo"<input type = 'checkbox' name = 'done' id = 'done' value='on'>";
+      echo "<input type='submit'value='submit'>";
+      echo "</form>";
     
     
     ?>
+    </div>
+    <script>
+ 
+    var textareas = document.getElementsByTagName('textarea');
+    var count = textareas.length;
+    for(var i=0;i<count;i++){
+        textareas[i].onkeydown = function(e){
+            if(e.keyCode==9 || e.which==9){
+                e.preventDefault();
+                var s = this.selectionStart;
+                this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+                this.selectionEnd = s+1; 
+            }
+        }
+    }
+
+    </script>
+    
+    
   
   
     </body>
