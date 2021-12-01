@@ -25,6 +25,7 @@ session_start();
   Welcome Student <?php echo $dataOfUser['username']; ?><br><br><br>
   
   <a href="takeTest.php">Take Test</a><br><br>
+  <a href="viewTests.php">View Tests</a><br><br>
   <a href="logout.php">Logout</a>
   
 </body>
