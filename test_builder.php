@@ -59,18 +59,30 @@ session_start(); //Requiring sesssion to enter
 <html>
 <head>
   <title>Blanck Test</title>
+  
+<style>
+form.exam{
+width: 50%;
+border-style: solid;
+border-width: 5px;
+background-color: lightblue;
+text-align: center;
+
+}
+body{
+ 
+  
+}
+</style>
+
 </head>
 
 <body>
 
-  <style type="text/css">
-  body{
-    background-color: #b0aa8c;
-  }
-  </style>
+  
   <h1><?php echo $_POST["selected_exam"]?></h1><br>
   
-  <form method="post">
+  <form method="post" class = "exam">
   
     <?php
       //Retrieving from Database
@@ -100,14 +112,10 @@ session_start(); //Requiring sesssion to enter
           if ($checkQ > 0){
             //If the query has returned an entries
             $qRow = mysqli_fetch_assoc($resultQ);
-           // $qcase = "qCase" . strval($counter);
-            //$qanswer = "qResult" . strval($counter);
-            //$b1 = $qRow[$qcase];
-            //$b2 = $qRow[$qanswer];
-            //$t_case_and_answer = $b1 . "#" . $b2;
+
             echo $counter . ") " . $qRow['question'] . "<br>";
             echo '<textarea id="answer' . $counter . '" name="answer' . $counter . '"  rows="5" cols="50"></textarea>';
-            //echo '<input type="hidden" id="t_case_2_2' . strval($counter) . '" name="t_case_a_' . strval($counter) . '" value="' . $t_case_and_answer . '">';
+
             
             echo "<br><br>";
             
@@ -133,7 +141,23 @@ session_start(); //Requiring sesssion to enter
     ?>
     
   </form>
-  
+ 
+  <script>
+ 
+var textareas = document.getElementsByTagName('textarea');
+var count = textareas.length;
+for(var i=0;i<count;i++){
+    textareas[i].onkeydown = function(e){
+        if(e.keyCode==9 || e.which==9){
+            e.preventDefault();
+            var s = this.selectionStart;
+            this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+            this.selectionEnd = s+1; 
+        }
+    }
+}
+
+    </script>
   
 </body>
 </html>
