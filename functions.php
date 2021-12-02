@@ -2,12 +2,23 @@
 //Extract the name of a function as long as the string has functionName followed by "(". EXAMPLE: def sum(a,b)...
 function extractFunction($student_function){
   $matches = array();
-  preg_match('/\b([a-z]+)\(/i', $student_function, $matches);
-  //First match should be the student function with an (.
-  $st_func = str_replace("(", "", $matches[0]);
-  if(!empty($st_func)){
-    return $st_func;
+  //PREVIOUS: preg_match('/\bdef.*\(/i', $student_function, $matches);
+  //UPDATE: Finds def followed by characters until it reaches a (. EX: def sum(a,b):\n\treturn a+b MATCHES "def sum("
+  preg_match('/def(.*?)\(/i', $student_function, $matches);
+  //First match should be the student function as EX: "def function(".
+  if(!empty($matches[0])){
+    //There first match is not empty, therefore isolate function name
+    $st_func = str_replace(["(", "def", " "], "", $matches[0]);
+    if(!empty($st_func)){
+      //If strip was possible, then return extracted function name
+      return $st_func;
+    }
+    else{
+      //If something went wrong then just return empty string
+      return "";
+    }
   }else{
+    //Return empty string if the first match was empty
     return "";
   }
 }
@@ -16,8 +27,6 @@ function extractFunction($student_function){
 function doesItContain($student_implement, $type){
   //student_implement is the string from the textarea
   //type must be acquired from query to pass to this function
-  //strpos returns a position, which can be used to find existance of substring in string
-  //str_contains does not work for some reason
   $pos = strpos($student_implement, $type);
   if($pos === false){
     return false;

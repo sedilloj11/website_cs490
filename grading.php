@@ -136,17 +136,64 @@ session_start(); //Requiring sesssion to enter
        $c = 0;
       while($row = mysqli_fetch_assoc($result)){
         
-        $answer = $row['answer'];
+        $originalAnswer = $row['answer'];//Variable created to preserve original answer. Use in: Displaying student answer
+        $answer = $originalAnswer; //EDITABLE variable to use in: 1)Name checking and overwriting, 2)Script. REASON: if we keep only one variable, then if needed to be changed, we would lose the original answer
         $Qid = $row['question_id'];
         $Tid = $row['test_id'];
-//-----------------------Test 'answer' for keyword and topic---------------------------
+        //-----------------------Test 'answer' for keyword and topic---------------------------
+        $errs ="";
+        $deduction = 0;
 
-
-
-      //Questions pull from Test 
+        //Questions pull from Test 
         $questQuery = "SELECT * FROM CS490Questions WHERE qID = $Qid";
         $questResult = mysqli_query($db,$questQuery);
         $Q = mysqli_fetch_assoc($questResult);
+        
+        //=====================REPLACING NAME IF INCORRECT================================
+        $qFuncName = $Q['keyword'];//NAME OF THE FUNCTION FROM QUERY
+        $sFuncName = extractFunction($answer);//NAME OF THE FUNCTION FROM STUDENT ANSWER
+        //At this point you can compare
+        if($sFuncName == $qFuncName){
+          $errs .= "The function names match\n"; //Do nothing
+        }else{
+          //Display message
+          //echo "The function names do not match";
+          $errs .= "The function names do not match\n";
+          $deduction = $deduction + .05;
+          //Change the name of the function to run the code without breaking
+          $answer = str_replace($sFuncName, $qFuncName, $answer); //Corrected function name / Original submission overwritten
+          echo $answer;
+        }
+        //==============================================================================
+        
+        //======================CHECKING KEYWORD IN FUNCTION==========================
+        $questionType = $Q['type'];
+        //We will only check for inclusion if the problem demands it. Typically in a for or while loop. Recursion should be handled differently
+        //1. Check if type of question is for or while loop | 2. Compare and respond accordingly
+        if(strpos("for while recursion", $questionType) !== false){
+          if($questionType == "recursion"){
+            //HANDLE RECURSION
+            //Check if function name appears more than one time
+            //$qFuncName -> original name of the function, $answer -> modified, or not, answer from the student
+            if(substr_count($answer, $qFuncName) > 1){
+              //Recursion found
+              $errs .= "Recursion found";
+            }else{
+              //Recursion was not found
+              $errs .= "Recursion NOT found";
+              //I just put this similar to the one you have below
+              $deduction = $deduction + .05;
+            }
+          }else{
+            //HANDLE EITHER FOR OR WHILE KEYWORD CHECKING
+              if(doesItContain($answer, $questionType)){
+                $errs .= $questionType . " is in solution\n";
+              }else{
+                $errs .="No ". $questionType . " in solution\n";
+                $deduction = $deduction + .05;
+              }
+          }
+        }
 
         $question = $Q['question'];//question
 
@@ -171,6 +218,7 @@ session_start(); //Requiring sesssion to enter
         $output = null;
         $retval = null;
         exec('python studentCD.py', $output, $retval);
+        
   
         
         
@@ -191,15 +239,15 @@ session_start(); //Requiring sesssion to enter
         
           echo "<td>" . $question . "</td>";
         
-          echo "<td>" . $answer . "</td>";
+          echo "<td>" . $originalAnswer . "</td>";
           
           echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . $point * $P[$c] ." ></td>";
           echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
  
          
           echo "<td>" . $P[$c] . "</td>";
-          
-          echo "<td><textarea id = 'comments".$c."' name='comments[]' ></textarea></td>";
+          //echo $errs;
+          echo "<td><textarea id = 'comments".$c."' name='comments[]' placeholder =" . $errs . "> </textarea></td>";
         
           
 
@@ -240,4 +288,3 @@ session_start(); //Requiring sesssion to enter
     </body>
     
 </html>
-
