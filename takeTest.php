@@ -16,19 +16,26 @@ session_start(); //Requiring sesssion to enter
 <html>
 <head>
   <title>Selecting Tests</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
   <style type="text/css">
   body{
-    background-color: #b0aa8c;
+  \
   }
   </style>
-  <h1>Select Tests</h1><br>
-  <a href="index.php">Home</a>
   
-  <form action="test_builder.php" method="post">
+      <ul>
+  <li><a href="takeTest.php">Take Test</a></li>
+  <li><a href="viewTests.php">View Tests</a></li>
+  <li><a href="logout.php">Logout</a></li>
+  </ul>
+  <h1>Select Tests</h1><br>
+ 
+  
+ 
   <?php 
     //Retrieve all questions from the database
     $query = "SELECT * FROM CS490Tests";
@@ -39,6 +46,7 @@ session_start(); //Requiring sesssion to enter
     echo "<br><br>";
       while($row = mysqli_fetch_assoc($qResult)){
         echo '<input type="radio" id="'. $row['tName'] . '" name="selected_exam" value="'. $row['tName'] . '"/>';
+        echo "<a href='test_builder.php?selected_exam=". $row['tName'] ."'>". $row['tName'] ."</a>";
         echo $row['tName'];
         echo "<br><br>";
       }
@@ -48,11 +56,14 @@ session_start(); //Requiring sesssion to enter
     }
   ?>
   
-  <input type="submit" value="Submit">
-  </form>
+ 
   
   
 </body>
 </html>
+
+
+
+  
 
 
