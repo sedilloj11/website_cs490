@@ -61,33 +61,32 @@ session_start(); //Requiring sesssion to enter
   <title>Blanck Test</title>
   
 <style>
-form.exam{
-width: 50%;
-border-style: solid;
-border-width: 5px;
-background-color: lightblue;
-text-align: center;
 
-}
 body{
  
   
 }
 </style>
+ <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
 <body>
+  <ul>
+  <li><a href="takeTest.php">Take Test</a></li>
+  <li><a href="viewTests.php">View Tests</a></li>
+  <li><a href="logout.php">Logout</a></li>
+  </ul>
 
   
-  <h1><?php echo $_POST["selected_exam"]?></h1><br>
+  <h1><?php echo $_GET["selected_exam"]?></h1><br>
   
   <form method="post" class = "exam">
   
     <?php
       //Retrieving from Database
-      $testName = $_POST["selected_exam"];
-      //echo $testName . "<br>";
+      $testName = $_GET["selected_exam"];
+      echo"<h2>" . $testName . "</h2>";
       $query = "SELECT * FROM CS490Tests WHERE tName='$testName'";
       $qResult = mysqli_query($db,$query);
       $qCheck = mysqli_num_rows($qResult);
