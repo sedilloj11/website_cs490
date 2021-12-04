@@ -12,21 +12,24 @@ session_start();
 <html>
 <head>
   <title>After the logging page</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
   <style type="text/css">
-  body{
-    background-color: #b0aa8c;
-  }
+  
+  
   </style>
-  <h1>Student Home</h1><br>
-  Welcome Student <?php echo $dataOfUser['username']; ?><br><br><br>
   
-  <a href="takeTest.php">Take Test</a><br><br>
-  <a href="viewTests.php">View Tests</a><br><br>
-  <a href="logout.php">Logout</a>
-  
+    <ul>
+  <li><a href="takeTest.php">Take Test</a></li>
+  <li><a href="viewTests.php">View Tests</a></li>
+  <li><a href="logout.php">Logout</a></li>
+  </ul>
+  <div class = "container">
+  <h1>Student Home <?php echo $dataOfUser['username']; ?></h1><br>
+  </div>
+
 </body>
 </html>
