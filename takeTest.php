@@ -1,3 +1,8 @@
+<form method  = "post">
+
+
+
+ 
 <?php
 session_start(); //Requiring sesssion to enter
 
@@ -32,10 +37,7 @@ session_start(); //Requiring sesssion to enter
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>
   </ul>
-  <h1>Select Tests</h1><br>
- 
-  
- 
+
   <?php 
     //Retrieve all questions from the database
     $query = "SELECT * FROM CS490Tests";
@@ -43,27 +45,28 @@ session_start(); //Requiring sesssion to enter
     $qCheck = mysqli_num_rows($qResult);//Will be set to the number of rows retrieved by the query
   
     if($qCheck > 0){
-    echo "<br><br>";
+    
+    echo "<div class = 'container'>";
+    echo "<h1>Available Tests</h1>";
+    echo "<div class = 'listDisplay'>";
+    
       while($row = mysqli_fetch_assoc($qResult)){
-        echo '<input type="radio" id="'. $row['tName'] . '" name="selected_exam" value="'. $row['tName'] . '"/>';
+        //echo '<input type="radio" id="'. $row['tName'] . '" name="selected_exam" value="'. $row['tName'] . '"/>';
+        echo "• ";
         echo "<a href='test_builder.php?selected_exam=". $row['tName'] ."'>". $row['tName'] ."</a>";
-        echo $row['tName'];
+        //echo $row['tName'];
         echo "<br><br>";
       }
+      
+    echo "</div>";
+    echo "</div>";
     }
     else{
       echo "<br><br>There are currently no existing tests.<br>";
     }
   ?>
   
- 
-  
-  
 </body>
 </html>
-
-
-
-  
 
 

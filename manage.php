@@ -18,19 +18,20 @@ session_start();
    
    <head>
       <title>Select Test to Grade</title>
+      <link rel="stylesheet" type="text/css" href="style.css">
    </head>
    
    <body>
-     <style type="text/css">
-      body{
-        background-color: #b0aa8c;
-      }
-     </style>
      
-      <h1>Choose a Test to Grade</h1>
-      <a href="welcomeAdmin.php">Home</a>
+      <ul>
+        <li><a href="welcomeAdmin.php">Home</a></li>
+      </ul>
       
-      <form action="grading.php" method="post">
+      <div class = "container">
+      <h1>Choose a Test to Grade</h1>
+      </div>
+      
+      <form action="grading.php" method="post" class = "takeTest">
        <?php 
         //Retrieve all questions from the database
         
@@ -63,7 +64,9 @@ session_start();
         }
       ?>
       
+      <div style="text-align:center">
       <input type="submit" value="Submit">
+      </div>
       </form>
       
    </body>

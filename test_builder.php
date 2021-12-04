@@ -79,7 +79,7 @@ body{
   </ul>
 
   
-  <h1><?php echo $_GET["selected_exam"]?></h1><br>
+ <br>
   
   <form method="post" class = "exam">
   

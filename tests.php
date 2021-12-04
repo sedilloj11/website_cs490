@@ -11,17 +11,20 @@ session_start(); //Requiring sesssion to enter
 <html>
 <head>
   <title>Existing Tests</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
-  <style type="text/css">
-  body{
-    background-color: #b0aa8c;
-  }
-  </style>
+  <ul>
+    <li><a href="welcomeAdmin.php">Home</a></li>
+    <li><a href = "createTest.php">Create Test</a></li>
+  </ul>
+    
+  <div class = "container">
   <h1>Existing Tests</h1><br>
-  <a href = "createTest.php">Create Test</a> | <a href="welcomeAdmin.php">Home</a>
+  
+  <div class = "listDisplay">
   <?php 
     //Retrieve all questions from the database
     $query = "SELECT * FROM CS490Tests";
@@ -29,9 +32,9 @@ session_start(); //Requiring sesssion to enter
     $qCheck = mysqli_num_rows($qResult);//Will be set to the number of rows retrieved by the query
   
     if($qCheck > 0){
-    echo "<br><br>";
+    
       while($row = mysqli_fetch_assoc($qResult)){
-        echo $row['tName'];
+        echo "• " . $row['tName'];
         echo "<br><br>";
       }
     }
@@ -40,7 +43,8 @@ session_start(); //Requiring sesssion to enter
     }
   ?>
   
-  
+  </div>
+  </div>
   
 </body>
 </html>

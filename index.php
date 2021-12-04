@@ -23,12 +23,13 @@ session_start();
   </style>
   
     <ul>
+  
   <li><a href="takeTest.php">Take Test</a></li>
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>
   </ul>
   <div class = "container">
-  <h1>Student Home <?php echo $dataOfUser['username']; ?></h1><br>
+  <h1>Student Home<br><br>Welcome Student: <?php echo $dataOfUser['username']; ?></h1><br>
   </div>
 
 </body>

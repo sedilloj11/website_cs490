@@ -58,53 +58,30 @@ session_start(); //Requiring sesssion to enter
 <html>
 <head>
   <title>Grade Test</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 
     <body>
-
-  <style type="text/css">
-  .view{
-    margin: auto;
-  background-color: white;
-  width: 50%;
-  border-style: solid;
-  border-width: 3px ;
  
-  text-align: ;left;
-  }
-  body{
-    background-color: #b0aa8c;
-  }
-  </style>
- 
-  
- <a href="manage.php">Manage</a> | <a href="welcomeAdmin.php">Home</a>
+  <ul>
+    <li><a href="welcomeAdmin.php">Home</a></li>
+    <li><a href="manage.php">Select Test to Grade</a></li>
+  </ul>
   
   
-  
- <div class = "view">
+ <div class = "container">
   
     <?php
       //Retrieving from Database Test Info
       $testID = $_POST["selected_test"];
       $rCount = 0;
       
-      
-      
-      
-      
-      
-      
       $query = "SELECT * FROM `CS490Answers` WHERE `unique_id` = '$testID'" ;
       echo "<br>";
       
       $result = mysqli_query($db,$query);
       
-        
 
-        
-        
-        
         //points from cs490 tests
         $pointsQuery = "SELECT T.`rScores` , T.`tName` FROM `CS490Tests` T, `CS490Answers` A WHERE A.test_id = T.`tID` AND A.`unique_id` = '$testID' ";
         $pointsResult = mysqli_query($db,$pointsQuery);        
@@ -115,7 +92,7 @@ session_start(); //Requiring sesssion to enter
         
         
         //start table
-            echo "<form method = 'POST'>";
+            echo "<form method = 'POST' >";
             echo "<table border='1'>";
             
             //POST test uniqueID
@@ -234,7 +211,7 @@ session_start(); //Requiring sesssion to enter
                 }
                 }
         ///table contents
-        
+          echo "<div class = 'listDisplay'>";
           echo "<tr>";
         
           echo "<td>" . $question . "</td>";
@@ -253,13 +230,16 @@ session_start(); //Requiring sesssion to enter
 
         
           echo "</tr>";
+           echo "</div>";
         
           $c++;
       }
       echo"<input type='hidden'  name='counter' value=". $c .">";
       echo "</table>";
-      echo"<input type = 'checkbox' name = 'done' id = 'done' value='on'>";
+      
+      echo"<br><br><input type = 'checkbox' name = 'done' id = 'done' value='on'>";
       echo "<input type='submit'value='submit'>";
+      
       echo "</form>";
     
     

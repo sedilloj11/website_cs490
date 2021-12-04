@@ -93,20 +93,23 @@ session_start(); //Requiring session to enter
 <html>
 <head>
   <title>Creating Test</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
-  <style type="text/css">
-  body{
-    background-color: #b0aa8c;
-  }
-  </style>
-  <a href="questions.php">Questions</a> | <a href="welcomeAdmin.php">Home</a>
-  <h1>Select Questions</h1><br>
+  <ul>
+    <li><a href="welcomeAdmin.php">Home</a></li>
+    <li><a href="questions.php">Questions</a></li>
+  </ul>
+  
+  <div class = "container">
+  <h1>TEST CREATION</h1><h2>Select Questions</h2>
+  </div>
   
   
-  <form method="post">
+  
+  <form method="post" class = "takeTest">
   
 	<label for="diff">Filter Question Difficulty:</label><br>
 	<select name="diff" id="diff">

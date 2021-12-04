@@ -11,27 +11,31 @@ session_start(); //Requiring sesssion to enter
 <html>
 <head>
   <title>Existing Questions</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
-  <style type="text/css">
-  body{
-    background-color: #b0aa8c;
-  }
-  </style>
-  <h1>Existing Questions</h1><br>
-  <a href = "createQuestion.php">Create Question</a> | <a href="welcomeAdmin.php">Home</a>
+  <ul>
+    <li><a href="welcomeAdmin.php">Home</a></li>
+    <li><a href = "createQuestion.php">Create Question</a></li>
+  </ul>
+  
+  <div class = "container">
+  <h1>Existing Questions</h1>
+  
+  <div class = "listDisplay">
   <?php 
     //Retrieve all questions from the database
     $query = "SELECT * FROM CS490Questions";
     $qResult = mysqli_query($db,$query);
     $qCheck = mysqli_num_rows($qResult);//Will be set to the number of rows retrieved by the query
-  
+    
+    
     if($qCheck > 0){
-    echo "<br><br>";
+    echo "<br>";
       while($row = mysqli_fetch_assoc($qResult)){
-        echo $row['question'];
+        echo "• " . $row['question'];
         echo "<br><br>";
       }
     }
@@ -39,7 +43,8 @@ session_start(); //Requiring sesssion to enter
       echo "<br><br>There are currently no existing questions.<br>";
     }
   ?>
-  
+  </div>
+  </div>
   
   
 </body>

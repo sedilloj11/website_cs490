@@ -41,6 +41,7 @@ session_start(); //Requiring sesssion to enter
   </style>
  
     <ul>
+  <li><a href="index.php">Home</a></li>
   <li><a href="takeTest.php">Take Test</a></li>
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>
@@ -48,7 +49,7 @@ session_start(); //Requiring sesssion to enter
  <div class = "container">
  <div class = "view">
 <?php
-echo "<p>hello $name</p>";
+echo "<p>Hello $name</p>";
 
 $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
     $qResult = mysqli_query($db,$query);
@@ -100,5 +101,3 @@ $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
  </body>
     
 </html>
-
-

@@ -140,7 +140,7 @@ session_start(); //Requiring sesssion to enter
   
   <ul>
   <li><a href="welcomeAdmin.php">Home</a></li>
-  <li><a href="createQuestions.php">Questions</a></li>
+  <li><a href="questions.php">View Questions</a></li>
   </ul>
  
   <div class= "container">
