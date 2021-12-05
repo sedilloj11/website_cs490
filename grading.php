@@ -59,6 +59,14 @@ session_start(); //Requiring sesssion to enter
 <head>
   <title>Grade Test</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+    .grade{
+    margin: auto;
+    width: 900px;
+    }
+    </style>
+
+
     </head>
 
     <body>
@@ -90,7 +98,7 @@ session_start(); //Requiring sesssion to enter
         echo "<h2>".$Points['tName']."</h2> ";
         $P = explode(",",$Points['rScores']);
         
-        
+        echo '<div class = "grade">';
         //start table
             echo "<form method = 'POST' >";
             echo "<table border='1'>";
@@ -101,7 +109,7 @@ session_start(); //Requiring sesssion to enter
             
             <th>Question</th>
             
-            <th>Answer</th>
+            <th>Output</th>
             
             <th>Points</th>
             
@@ -131,15 +139,15 @@ session_start(); //Requiring sesssion to enter
         $sFuncName = extractFunction($answer);//NAME OF THE FUNCTION FROM STUDENT ANSWER
         //At this point you can compare
         if($sFuncName == $qFuncName){
-          $errs .= "The function names match\n"; //Do nothing
+          //$errs .= "The function names match<br>"; //Do nothing
         }else{
           //Display message
           //echo "The function names do not match";
-          $errs .= "The function names do not match\n";
-          $deduction = $deduction + .05;
+          $errs .= "-The function names do not match<br>";
+          $deduction = $deduction + .25;
           //Change the name of the function to run the code without breaking
           $answer = str_replace($sFuncName, $qFuncName, $answer); //Corrected function name / Original submission overwritten
-          echo $answer;
+          //echo $answer;
         }
         //==============================================================================
         
@@ -154,20 +162,19 @@ session_start(); //Requiring sesssion to enter
             //$qFuncName -> original name of the function, $answer -> modified, or not, answer from the student
             if(substr_count($answer, $qFuncName) > 1){
               //Recursion found
-              $errs .= "Recursion found";
+              //$errs .= "Recursion found<br>";
             }else{
               //Recursion was not found
-              $errs .= "Recursion NOT found";
-              //I just put this similar to the one you have below
-              $deduction = $deduction + .05;
+              $errs .= "-Recursion NOT found<br>";
+              $deduction = $deduction + .25;
             }
           }else{
             //HANDLE EITHER FOR OR WHILE KEYWORD CHECKING
               if(doesItContain($answer, $questionType)){
-                $errs .= $questionType . " is in solution\n";
+                //$errs .= $questionType . " is in solution<br>";
               }else{
-                $errs .="No ". $questionType . " in solution\n";
-                $deduction = $deduction + .05;
+                $errs .="-No ". $questionType . " in solution<br>";
+                $deduction = $deduction + .25;
               }
           }
         }
@@ -195,7 +202,9 @@ session_start(); //Requiring sesssion to enter
         $output = null;
         $retval = null;
         exec('python studentCD.py', $output, $retval);
-        
+        if(!isset($retval)){
+        $err .= "- script did not run<br>";
+        }
   
         
         
@@ -204,33 +213,37 @@ session_start(); //Requiring sesssion to enter
         $caseCount = count($C);
         $PpC = (1 / $caseCount);//PointperCase
         
+        //deductions
+       $d = $deduction * $P[$c];
+       
+        $correct = 0;
         for ($x = 0; $x < $caseCount; $x++){
              
               if($output[$x] == $R[$x]){
                   $point = $point + $PpC;
+                  $correct = $correct + 1;
                 }
                 }
         ///table contents
-          echo "<div class = 'listDisplay'>";
+          
           echo "<tr>";
         
           echo "<td>" . $question . "</td>";
         
-          echo "<td>" . $originalAnswer . "</td>";
+          echo "<td>" . $originalAnswer . "<br>". $correct ."/" . $caseCount . "<br>". $errs . "</td>";
           
-          echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . $point * $P[$c] ." ></td>";
+          echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . ($point * $P[$c] - $d) ." ></td>";
           echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
  
          
           echo "<td>" . $P[$c] . "</td>";
-          //echo $errs;
-          echo "<td><textarea id = 'comments".$c."' name='comments[]' placeholder =" . $errs . "> </textarea></td>";
+         
+          echo "<td><textarea id = 'comments".$c."' name='comments[]' > </textarea></td>";
         
           
 
         
           echo "</tr>";
-           echo "</div>";
         
           $c++;
       }
@@ -239,11 +252,11 @@ session_start(); //Requiring sesssion to enter
       
       echo"<br><br><input type = 'checkbox' name = 'done' id = 'done' value='on'>";
       echo "<input type='submit'value='submit'>";
-      
       echo "</form>";
     
     
     ?>
+    </div>
     </div>
     <script>
  
