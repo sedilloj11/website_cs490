@@ -1,9 +1,8 @@
+
 <?php
 
 
 /////TODO: 
-//ADD SPLIT VIEW DISPLAY OF SELECTED QUESTIONS 
-
 
 
 session_start(); //Requiring session to enter
@@ -12,14 +11,15 @@ session_start(); //Requiring session to enter
   include("functions.php"); //require file where functions are implemented
   
   $dataOfUser = isLoggedIn($db);//Check if the user is logged in and store its data into variable
-  
+  //$_SESSION['QuestionBank']  = array();
   //Check if the POST method was used
-  if($_SERVER['REQUEST_METHOD'] == "POST"){
+
 	  
-	$diff = $_POST['diff'];
-	$type = $_POST['type'];
+//---------------------QUESTION FILTER SEARCH----------------
 	
 	if(isset($_POST['search'])) {
+ 	$diff = $_POST['diff'];
+	$type = $_POST['type'];
 		if($_POST['diff'] != '') {
 			if($_POST['type'] != '') {
 				$query = "SELECT * FROM CS490Questions WHERE difficulty ='".$diff."' AND type='".$type."'";
@@ -39,41 +39,70 @@ session_start(); //Requiring session to enter
 			$qResult = mysqli_query($db,$query);
 		}
 	}
-	else {
-		$query = "SELECT * FROM CS490Questions";
-		$qResult = mysqli_query($db,$query);
-	}  
+//------CLEAR QUESTION BANK------------------- 
+ 
+ 
+if(isset($_POST['clear'])){
+
+    $_SESSION['QuestionBank']  = array();
+}
+
+//--------------REMOVE QUESTIONS------------------------
+if(isset($_POST['remove'])){
+   $selectedQuestions = $_POST['tSelection'];
+    $x = sizeof($selectedQuestions);
+    for($y =0; $y < $x; $y++){
+      $id = $selectedQuestions[$y];
+      echo $id;
+      unset($_SESSION['QuestionBank'][$id]);
+      $_SESSION['QuestionBank'] = array_values($_SESSION['QuestionBank']);
+      
+      }
+  }
+    
+//---------------------ADD QUESTIONS----------------
+
+ if(isset($_POST['add'])){
+ 
 		
     //Getting all submitted scores from text boxes
-    $allScores = [];
+    //Getting array of selected options
+    $selectedQuestions = $_POST['qSelection']; 
     $submittedScores = $_POST['scores'];
-    foreach($submittedScores as $score){
-      if(!empty($score)){
-        array_push($allScores, $score);
-      }
+    $submittedText = $_POST['qText'];
+    $x = count($selectedQuestions);
+    for($y =0; $y < $x; $y++){
+    $QP = array("question"=> $selectedQuestions[$y], "points"=> $submittedScores[$y], "text"=> "$submittedText[$y]");
+    print_r($QP);
+    array_push($_SESSION['QuestionBank'], $QP);
+ 
+    }
+    $_POST = array();
     }
     
     //Getting array of checkboxes marked
-    $testName = $_POST['testName'];
-    $selectedQuestions = $_POST['qSelection']; //Getting array of selected options
-    if(empty($selectedQuestions)){
-      echo "No questions were selected.";
-    }else{
-      $numOfQuestions = count($selectedQuestions); //Getting number of selected questions
+//---------------------TEST SUBMISSION----------------
+      if(isset($_POST['submit'])){
+      $testName = $_POST['testName'];
       $strOfQuestions = ""; //Declaring string for option information submission
       $strOfScores = "";
-      for($j=0; $j<$numOfQuestions; $j++){
-        if($j == $numOfQuestions - 1){
-             $strOfQuestions .= $selectedQuestions[$j];
-             $strOfScores .= $allScores[$j];
+      $max= sizeof($_SESSION['QuestionBank']); 
+        for($i=0; $i<$max; $i++) {
+           $case = ($_SESSION['QuestionBank'][$i]); 
+           if($j == $numOfQuestions - 1){
+             $strOfQuestions .= $case['question'];
+             $strOfScores .= $case['points'];
           
         }else{
-            $strOfQuestions .= $selectedQuestions[$j];
+            $strOfQuestions .= $case['question'];
             $strOfQuestions .= ",";
-            $strOfScores .= $allScores[$j] . ",";
+            $strOfScores .= $case['points'] . ",";
         }
-      }
+          } 
+    
+
       
+    
       if($strOfQuestions != "" && !empty($testName)){
         //Writing query
         $query = "insert into CS490Tests (tName, tQuestions, rScores) values ('$testName', '$strOfQuestions', '$strOfScores')";
@@ -83,9 +112,11 @@ session_start(); //Requiring session to enter
         header("Location: welcomeAdmin.php");//Redirecting to the login page adter registration
         die;
       }
+      
+    
     }
     
-  }
+  
   
 ?>
 
@@ -94,6 +125,40 @@ session_start(); //Requiring session to enter
 <head>
   <title>Creating Test</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+  
+  .split 
+  {
+  margin:auto;
+  width: 80%;
+  overflow: auto;
+
+	
+   }
+   .left 
+   {
+   background-color: #b0aa8c;
+   border-style: inset;
+   border-width: 3px ;
+   width: 50%;
+   margin:10px;
+   float: left;
+   
+    
+
+   }
+   
+   .right 
+   {
+   background-color: #b0aa8c;
+   border-style: inset;
+   border-width: 3px ;
+   margin-top:10px;
+   width: 45%;
+
+   float: left;
+  }
+  </style>
 </head>
 
 <body>
@@ -103,22 +168,21 @@ session_start(); //Requiring session to enter
     <li><a href="questions.php">Questions</a></li>
   </ul>
   
-  <div class = "container">
-  <h1>TEST CREATION</h1><h2>Select Questions</h2>
-  </div>
-  
-  
-  
-  <form method="post" class = "takeTest">
-  
-	<label for="diff">Filter Question Difficulty:</label><br>
+    <div class= "container">
+  <h1>Select Questions</h1><br>
+  <div class ="split">
+  <div class ="left">
+  <table border = "1">
+  <form method="post">
+  <tr>
+	<label for="diff">Difficulty:</label>
 	<select name="diff" id="diff">
 		<option value="easy">Easy</option>
 		<option value="medium">Medium</option>
 		<option value="hard">Hard</option>
-	</select><br><br>
+	</select>
 	
-	<label for="type">Filter Question Type:</label><br>
+	<label for="type">Type:</label>
 	<select name="type" id="type">
 			<option value="for">for loop</option>
 		<option value="while">while loop</option>
@@ -126,12 +190,14 @@ session_start(); //Requiring session to enter
 		<option value="conditionals">Conditionals</option>
 		<option value="recursion">Recursion</option>
 		<option value="other">Other</option>
-	</select><br><br>
+	</select>
+ </tr>
+ <tr><td>
 	
-	<input type="submit" name="search" value="Filter"><br><br>
+	<input type="submit" name="search" value="Filter">
+  <input type="submit" name="add" value="add">
   
-    <label for="testName">Test Name:</label><br>
-    <input type="text" id="testName" name="testName"><br><br>
+</td></tr>
     <?php
 	
     //Retrieve all questions from the database
@@ -140,26 +206,63 @@ session_start(); //Requiring session to enter
     $qCheck = mysqli_num_rows($qResult);//Will be set to the number of rows retrieved by the query
     
     if($qCheck > 0){
-    echo "<br><br>";
-    $i = 1;
-    $info = "";
+ 
       while($row = mysqli_fetch_assoc($qResult)){
-        $info .= $i;
-        echo '<input type="checkbox" name="qSelection[]" value="' . $info . '" />';
-        $i = $i + 1;
-        $info = "";
-        echo $row['question'] . ". Points: ";
+        echo"<tr>
+           <td>";
+        echo '<input type="checkbox" name="qSelection[]" value="' . $row['qID'] . '" ><br>'. $row['question'] .'<br></input>';
+        echo '<label for="scores">Points:</label><br>';
         echo '<input type="text" name="scores[]" id="scores" />';
-        echo "<br><br>";
-      }
+        echo '<input type= "hidden" name = "qText[]" value ="'. $row['question'] .'" />';
+        echo"</td>
+             </tr>";
+        }
     }
+    
     ?>
-    
-    
-    
-    <input type="submit" value="Submit">
+
   </form>
+  </table>
+  </div>
+  <div class = "right">
+    <table>
+    <form method = "POST">  
+    <tr>
+    <td> 
+    <label for="testName">Test Name:</label><br>
+    <input type="text" id="testName" name="testName">
+    </tr>
+    </td> 
+    <?php
+    $max= sizeof($_SESSION['QuestionBank']); 
+    for($i=0; $i<$max; $i++) {
+    echo"<tr>
+     <td>";
+    $case = ($_SESSION['QuestionBank'][$i]);
+    echo '<input type="checkbox" name="tSelection[]" value= ' . $i . ' />'; 
+    $case = ($_SESSION['QuestionBank'][$i]);
+    echo $case['text'];
+    echo ": ";
+    echo $case['points'];
+    echo "<br>";
+    echo"</td>
+     </tr>";
+    }
+
+     ?>
+     <tr>
+     <td>
+     <input type="submit" name="remove" value="remove">
+     <input type="submit" name="clear" value="clear">
+     <input type="submit" name="submit" value="submit">
+     </tr>
+     </td>
+  </form>
+  </table>
   
+</div>
+</div>
+</div>
   
 </body>
 </html>
