@@ -1,10 +1,5 @@
 
 <?php
-
-
-/////TODO: 
-
-
 session_start(); //Requiring session to enter
 
   include("dbConnect.php"); //requires file for connection to database
@@ -84,19 +79,22 @@ if(isset($_POST['remove'])){
 //---------------------TEST SUBMISSION----------------
       if(isset($_POST['submit'])){
       $testName = $_POST['testName'];
-      $strOfQuestions = ""; //Declaring string for option information submission
-      $strOfScores = "";
+      $strOfQuestions = ""; //Declaring string for question id of test information
+      $strOfScores = ""; //Declaring string for respective score information
+      $possiblePoints = "";
       $max= sizeof($_SESSION['QuestionBank']); 
         for($i=0; $i<$max; $i++) {
            $case = ($_SESSION['QuestionBank'][$i]); 
-           if($j == $numOfQuestions - 1){
+           if($i == $max - 1){
              $strOfQuestions .= $case['question'];
              $strOfScores .= $case['points'];
+             $possiblePoints += (float)$case['points'];
           
         }else{
             $strOfQuestions .= $case['question'];
             $strOfQuestions .= ",";
             $strOfScores .= $case['points'] . ",";
+            $possiblePoints += (float)$case['points'];
         }
           } 
     
@@ -105,7 +103,8 @@ if(isset($_POST['remove'])){
     
       if($strOfQuestions != "" && !empty($testName)){
         //Writing query
-        $query = "insert into CS490Tests (tName, tQuestions, rScores) values ('$testName', '$strOfQuestions', '$strOfScores')";
+        $possiblePointsstr = strval($possiblePoints);
+        $query = "insert into CS490Tests (tName, tQuestions, rScores, possiblePoints) values ('$testName', '$strOfQuestions', '$strOfScores', '$possiblePointsstr')";
         //Running query in the database
         mysqli_query($db,$query);
         //Redirect to question bank after it is created
@@ -165,7 +164,12 @@ if(isset($_POST['remove'])){
 
   <ul>
     <li><a href="welcomeAdmin.php">Home</a></li>
-    <li><a href="questions.php">Questions</a></li>
+    <li><a href="questions.php">View Questions</a></li>
+    <li><a href="createQuestion.php">Create Question</a></li>
+    <li><a href="tests.php">View Tests</a></li>
+    <li><a href="createTest.php">Create Test</a></li>
+    <li><a href="manage.php">Grade Tests</a></li>
+    <li><a href = "logout.php">Sign Out</a></li>
   </ul>
   
     <div class= "container">

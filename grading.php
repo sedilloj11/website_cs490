@@ -73,7 +73,12 @@ session_start(); //Requiring sesssion to enter
  
   <ul>
     <li><a href="welcomeAdmin.php">Home</a></li>
-    <li><a href="manage.php">Select Test to Grade</a></li>
+    <li><a href="questions.php">View Questions</a></li>
+    <li><a href="createQuestion.php">Create Question</a></li>
+    <li><a href="tests.php">View Tests</a></li>
+    <li><a href="createTest.php">Create Test</a></li>
+    <li><a href="manage.php">Grade Tests</a></li>
+    <li><a href = "logout.php">Sign Out</a></li>
   </ul>
   
   

@@ -58,7 +58,7 @@ session_start(); //Requiring sesssion to enter
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Blanck Test</title>
+  <title>Blank Test</title>
   
 <style>
 
@@ -73,6 +73,7 @@ body{
 
 <body>
   <ul>
+  <li><a href="index.php">Home</a></li>
   <li><a href="takeTest.php">Take Test</a></li>
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>

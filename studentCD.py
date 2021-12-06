@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-def largest(lst):
-	largest = -1
-	for num in lst:
-		if num > largest:
-			largest = num
+def largest(lst): 
+	largest = -1 
+	for num in lst: 
+		if num > largest: 
+			largest = num 
 	return largest
-
 print(largest([5,6,2,7,1,4,2]))
 
 print(largest([2,3,45,52,4,1]))

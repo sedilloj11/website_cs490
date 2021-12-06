@@ -19,6 +19,7 @@ session_start();
    <body>
      
        <ul>  
+         <li><a href="welcomeAdmin.php">Home</a></li>
          <li><a href="questions.php">View Questions</a></li>
          <li><a href="createQuestion.php">Create Question</a></li>
          <li><a href="tests.php">View Tests</a></li>

@@ -33,10 +33,11 @@ session_start(); //Requiring sesssion to enter
   </style>
   
       <ul>
-  <li><a href="takeTest.php">Take Test</a></li>
-  <li><a href="viewTests.php">View Tests</a></li>
-  <li><a href="logout.php">Logout</a></li>
-  </ul>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="takeTest.php">Take Test</a></li>
+        <li><a href="viewTests.php">View Tests</a></li>
+        <li><a href="logout.php">Logout</a></li>
+      </ul>
 
   <?php 
     //Retrieve all questions from the database
