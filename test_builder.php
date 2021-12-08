@@ -30,6 +30,9 @@ session_start(); //Requiring sesssion to enter
       $answer_ID = "answer" . strval($i + 1);
       $currentAnswer = $_POST[$answer_ID];
       $currentQuestion = $question_IDs[$i];
+      if(!$currentAnswer){
+      $currentAnswer = "no submission";
+      }
      
       //Insert entry into CS490 Answers
       if(!empty($st_ID) && !empty($test_ID) && !empty($currentQuestion) && !empty($currentAnswer)){
@@ -62,6 +65,42 @@ session_start(); //Requiring sesssion to enter
   
 <style>
 
+h3{
+text-align: left ;
+margin-left: 15%;
+}
+
+td{
+background-color: white;
+white-space: pre-wrap;
+
+}
+  table{
+table-layout: auto;
+margin: auto;
+padding: 10px;
+width: 400px;
+text-align: left;
+background-color: #b0aa8c;
+
+
+}
+form{
+ text-align: center;
+ border-width: 1px ;
+}
+
+  .view{
+    margin: auto;
+  background-color: white;
+  overflow: auto;
+  width: 700px;
+  border-style: solid;
+  border-width: 3px ;
+  padding: 10px ;
+ 
+  text-align: left;
+  }
 body{
  
   
@@ -78,16 +117,17 @@ body{
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>
   </ul>
+  
+  <div class ="container">
 
-  
- <br>
-  
-  <form method="post" class = "exam">
   
     <?php
       //Retrieving from Database
       $testName = $_GET["selected_exam"];
-      echo"<h2>" . $testName . "</h2>";
+      echo"<h1>" . $testName . "</h1>";
+      echo "</div>";
+        echo '<div class = "view" >
+            <form method="post" >';
       $query = "SELECT * FROM CS490Tests WHERE tName='$testName'";
       $qResult = mysqli_query($db,$query);
       $qCheck = mysqli_num_rows($qResult);
@@ -95,13 +135,15 @@ body{
       
       //If the retrieval results in at least one row
       if($qCheck > 0){
-        //echo $testName . "<br>";
+     
         while($row = mysqli_fetch_assoc($qResult)){
           $questions_raw = $row['tQuestions']; //Getting question string from database | Should only be 1 entry at this point
+          $scores_raw = $row['rScores'];
           $test_information =  $row['tID']; //Getting test id information
         }
         $questions = explode(",",$questions_raw); //Splitting the questions by delimeter
-        //echo $questions[0];
+        $scores = explode(",",$scores_raw);
+        
         //Retrieve the questions from database
         $counter = 1;
         foreach($questions as $question){
@@ -111,13 +153,13 @@ body{
           $checkQ = mysqli_num_rows($qResult);
           if ($checkQ > 0){
             //If the query has returned an entries
+            echo '<table border = "1">';
             $qRow = mysqli_fetch_assoc($resultQ);
 
-            echo $counter . ") " . $qRow['question'] . "<br>";
-            echo '<textarea id="answer' . $counter . '" name="answer' . $counter . '"  rows="5" cols="50"></textarea>';
+            echo "<h3>". $counter . "</h3><tr><td><p>" . $qRow['question'] . "</p></td><td><p>". $scores[$counter-1] ."</p></td></tr>";
+            echo '<tr><td><textarea id="answer' . $counter . '" name="answer' . $counter . '" rows="5" cols="50"></textarea></td></tr>';
 
             
-            echo "<br><br>";
             
             $counter++;
             
@@ -126,12 +168,11 @@ body{
           }
           
         }
-      
+      echo "</table>"; 
       echo '<input type="hidden" id="s_questions" name="s_questions" value="' . $questions_raw . '">';
       echo '<input type="hidden" id="s_test_id" name="s_test_id" value="' . $test_information . '">';
       echo '<input type="hidden" id="sub_answers_counter" name="sub_answers_counter" value="' . $counter . '">';
-      echo '<input type="submit" value="Submit">';
-      
+      echo '<tr><input type="submit" value="Submit"></tr>';
       } else{
         echo "There were no questions in this tests";
       }
@@ -141,7 +182,9 @@ body{
     ?>
     
   </form>
- 
+  
+ </div>
+ </div>
   <script>
  
 var textareas = document.getElementsByTagName('textarea');

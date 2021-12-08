@@ -1,4 +1,4 @@
-<form method  = "post">
+
 
 
 
@@ -10,11 +10,7 @@ session_start(); //Requiring sesssion to enter
   include("functions.php"); //require file where functions are implemented
   
   $dataOfUser = isLoggedIn($db);//Check if the user is logged in and store its data into variable
-  
-  if($_SERVER['REQUEST_METHOD'] == "POST"){
-    header("Location: test_builder.php");//Redirecting to the login page adter registration
-    die;
-  }
+
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +23,19 @@ session_start(); //Requiring sesssion to enter
 <body>
 
   <style type="text/css">
+  .view{
+    margin: auto;
+  background-color: white;
+  overflow: auto;
+  width: 900px;
+  border-style: solid;
+  border-width: 3px ;
+  padding: 10px ;
+ 
+  text-align: center;
+  }
   body{
-  \
+  
   }
   </style>
   
@@ -49,17 +56,16 @@ session_start(); //Requiring sesssion to enter
     
     echo "<div class = 'container'>";
     echo "<h1>Available Tests</h1>";
-    echo "<div class = 'listDisplay'>";
+    echo "</div>";
+    echo "<div class = 'view'>";
     
       while($row = mysqli_fetch_assoc($qResult)){
-        //echo '<input type="radio" id="'. $row['tName'] . '" name="selected_exam" value="'. $row['tName'] . '"/>';
-        echo "• ";
-        echo "<a href='test_builder.php?selected_exam=". $row['tName'] ."'>". $row['tName'] ."</a>";
-        //echo $row['tName'];
-        echo "<br><br>";
+        
+        echo "<a href='test_builder.php?selected_exam=". $row['tName'] ."'>• ". $row['tName'] ."</a><br>";
+
       }
       
-    echo "</div>";
+
     echo "</div>";
     }
     else{

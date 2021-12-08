@@ -20,18 +20,34 @@ session_start(); //Requiring sesssion to enter
 <body>
 
   <style type="text/css">
+
+
+th,td{
+background-color: white;
+white-space: pre-wrap;
+
+}
   table{
-  width: 80%;
-  }
+  table-layout: fixed;
+margin: auto;
+padding: 10px;
+width: 700px;
+text-align: left;
+overflow: auto;
+background-color: #b0aa8c;
+
+
+}
   .view{
     margin: auto;
   background-color: white;
-  width: 50%;
+  overflow: auto;
+  width: 900px;
   border-style: solid;
   border-width: 3px ;
   padding: 10px ;
  
-  text-align: ;left;
+  text-align: left;
   }
   body{
   background-color: #b0aa8c;
@@ -45,12 +61,13 @@ session_start(); //Requiring sesssion to enter
   <li><a href="takeTest.php">Take Test</a></li>
   <li><a href="viewTests.php">View Tests</a></li>
   <li><a href="logout.php">Logout</a></li>
-  </ul><p>hello $name</p>
- <div class = "container">
- <div class = "view">
-<?php
-echo "<h3>" . strtoupper($name) . " Test Records</h3>";
+  </ul>
 
+ <div class = "container">
+<?php
+echo "<h1>" . strtoupper($name) . " Test Records</h1>";
+echo "</div>";
+echo '<div class = "view">';
 $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
     $qResult = mysqli_query($db,$query);
     $qCheck = mysqli_num_rows($qResult);//Will be set to the number of rows retrieved by the query
@@ -84,8 +101,8 @@ $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
           echo "<table border='1'>
           <tablehead>
           <th>". $testFinalNameInfo['tName'] ." </th>
-          <th>Earned Score: ". $testTotalScoreInfo['score'] . " | " . number_format($percentageEarned,2,'.',',') . "% </th>
-          <th>Possible Points: ". $testFinalNameInfo['possiblePoints'] . " </th>
+          <th>Score: ". number_format($percentageEarned,2,'.',',') . "% </th>
+          <th>Points: ". $testTotalScoreInfo['score'] . " / ". $testFinalNameInfo['possiblePoints'] . " </th>
           </tablehead>
           
             <tr>
@@ -101,10 +118,18 @@ $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
             </tr>";
 
           while($row = mysqli_fetch_assoc($tResult)){
+          
+          $questQuery = "SELECT * FROM CS490Questions WHERE qID =  " . $row['question_id'] ." ";
+          $questResult = mysqli_query($db,$questQuery);
+          $Q = mysqli_fetch_assoc($questResult);
+          
+          $question = $Q['question'];//question
+          
+          
             $totalPoints += (float)$row['qScore'];
             echo  "<tr>";
-            echo  "<td>" . $row['question_id'] . "</td>"; 
-            echo  "<td><p>" . $row['answer'] . "</p></td>";
+            echo  "<td>" . $question . "</td>"; 
+            echo  "<td>" . $row['answer'] . "</td>";
             echo  "<td>" . $row['qScore'] . "</td>";
             echo  "<td>" . $row['comments'] . "</td>";
             echo   "</tr>";
@@ -117,7 +142,7 @@ $query = "SELECT * FROM `CS490ExamRecords`  where student_id = '$id'";
       }
    
 ?>
-</div>
+
 </div>
 
  </body>

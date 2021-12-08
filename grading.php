@@ -10,8 +10,8 @@ session_start(); //Requiring sesssion to enter
   
   
   ///HANDLING POST FROM FORM
-  $check = ($_POST['done']);
-  if(isset($check)){
+  
+  if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     $tID = $_POST['Tid'];
     $counter = $_POST['counter'];
@@ -64,6 +64,35 @@ session_start(); //Requiring sesssion to enter
     margin: auto;
     width: 900px;
     }
+    
+    th,td{
+background-color: white;
+white-space: pre-wrap;
+
+}
+  table{
+  table-layout: auto;
+margin: auto;
+padding: 10px;
+width: 700px;
+text-align: center;
+overflow: auto;
+background-color: #b0aa8c;
+
+
+}
+
+.view{
+    margin: auto;
+  background-color: white;
+  overflow: auto;
+  width: 900px;
+  border-style: solid;
+  border-width: 3px ;
+  padding: 10px ;
+ 
+  text-align: center;
+  }
     </style>
 
 
@@ -82,16 +111,15 @@ session_start(); //Requiring sesssion to enter
   </ul>
   
   
- <div class = "container">
+ <div class = "view">
   
     <?php
       //Retrieving from Database Test Info
-      $testID = $_POST["selected_test"];
+      $testID = $_GET["selected_exam"];
       $rCount = 0;
       
       $query = "SELECT * FROM `CS490Answers` WHERE `unique_id` = '$testID'" ;
-      echo "<br>";
-      
+    
       $result = mysqli_query($db,$query);
       
 
@@ -235,7 +263,7 @@ session_start(); //Requiring sesssion to enter
         
           echo "<td>" . $question . "</td>";
         
-          echo "<td>" . $originalAnswer . "<br>". $correct ."/" . $caseCount . "<br>". $errs . "</td>";
+          echo "<td>" . $originalAnswer . "<br>---------------------------------<br>-". $correct ."/" . $caseCount . "<br>". $errs . "</td>";
           
           echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . ($point * $P[$c] - $d) ." ></td>";
           echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
@@ -255,7 +283,7 @@ session_start(); //Requiring sesssion to enter
       echo"<input type='hidden'  name='counter' value=". $c .">";
       echo "</table>";
       
-      echo"<br><br><input type = 'checkbox' name = 'done' id = 'done' value='on'>";
+   
       echo "<input type='submit'value='submit'>";
       echo "</form>";
     

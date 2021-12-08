@@ -6,10 +6,6 @@ session_start();
   
   $dataOfUser = isLoggedIn($db); //Check if the user is logged in and store its data into variable
   
-  if($_SERVER['REQUEST_METHOD'] == "POST"){
-    header("Location: grading.php");//Redirecting to the login page adter registration
-    die;
-  }
   
 ?>
 
@@ -19,6 +15,20 @@ session_start();
    <head>
       <title>Select Test to Grade</title>
       <link rel="stylesheet" type="text/css" href="style.css">
+      
+      <style>
+      .view{
+    margin: auto;
+  background-color: white;
+  overflow: auto;
+  width: 900px;
+  border-style: solid;
+  border-width: 3px ;
+  padding: 10px ;
+ 
+  text-align: center;
+  }
+      </style>
    </head>
    
    <body>
@@ -37,7 +47,7 @@ session_start();
       <h1>Choose a Test to Grade</h1>
       </div>
       
-      <form action="grading.php" method="post" class = "takeTest">
+      <div  class ="view">
        <?php 
         //Retrieve all questions from the database
         
@@ -54,9 +64,9 @@ session_start();
             $name_query_check = mysqli_num_rows($name_query_result);
             if($name_query_check > 0){
               while($nameRow = mysqli_fetch_assoc($name_query_result)){
-                echo '<input type="radio" id="'. $nameRow['tName'] . '" name="selected_test" value="'. $row['test_id'] . '"/>';
-                echo $nameRow['tName'] . " - Student ID: " . $row['student_id'];
-                echo "<br><br>";
+               
+                echo "• ";
+                echo "<a href='grading.php?selected_exam=". $row['test_id'] ."'>". $nameRow['tName'] . " - Student ID: " . $row['student_id'] ."</a>";
                 }
             }
             else{
@@ -70,10 +80,8 @@ session_start();
         }
       ?>
       
-      <div style="text-align:center">
-      <input type="submit" value="Submit">
       </div>
-      </form>
+      </div>
       
    </body>
    

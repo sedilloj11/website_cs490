@@ -63,11 +63,10 @@ if(isset($_POST['remove'])){
     //Getting all submitted scores from text boxes
     //Getting array of selected options
     $selectedQuestions = $_POST['qSelection']; 
-    $submittedScores = $_POST['scores'];
     $submittedText = $_POST['qText'];
     $x = count($selectedQuestions);
     for($y =0; $y < $x; $y++){
-    $QP = array("question"=> $selectedQuestions[$y], "points"=> $submittedScores[$y], "text"=> "$submittedText[$y]");
+    $QP = array("question"=> $selectedQuestions[$y], "text"=> "$submittedText[$y]");
     print_r($QP);
     array_push($_SESSION['QuestionBank'], $QP);
  
@@ -79,6 +78,7 @@ if(isset($_POST['remove'])){
 //---------------------TEST SUBMISSION----------------
       if(isset($_POST['submit'])){
       $testName = $_POST['testName'];
+      $submittedScores = $_POST['scores'];
       $strOfQuestions = ""; //Declaring string for question id of test information
       $strOfScores = ""; //Declaring string for respective score information
       $possiblePoints = "";
@@ -87,14 +87,14 @@ if(isset($_POST['remove'])){
            $case = ($_SESSION['QuestionBank'][$i]); 
            if($i == $max - 1){
              $strOfQuestions .= $case['question'];
-             $strOfScores .= $case['points'];
-             $possiblePoints += (float)$case['points'];
+             $strOfScores .= (float)$submittedScores[$i];
+             $possiblePoints += (float)$submittedScores[$i];
           
         }else{
             $strOfQuestions .= $case['question'];
             $strOfQuestions .= ",";
-            $strOfScores .= $case['points'] . ",";
-            $possiblePoints += (float)$case['points'];
+            $strOfScores .= (float)$submittedScores[$i] . ",";
+            $possiblePoints += (float)$submittedScores[$i];
         }
           } 
     
@@ -125,13 +125,21 @@ if(isset($_POST['remove'])){
   <title>Creating Test</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <style>
-  
+  p{
+  background-color: white;
+  border-style: solid;
+  border-width: 1px ;
+  padding: 4px;
+  }
   .split 
   {
   margin:auto;
-  width: 80%;
+  width: 900px;
+  padding-bottom: 20px;
   overflow: auto;
-
+  background-color: white;
+   border-style: solid;
+   border-width: 3px ;
 	
    }
    .left 
@@ -142,6 +150,7 @@ if(isset($_POST['remove'])){
    width: 50%;
    margin:10px;
    float: left;
+    text-align: left;
    
     
 
@@ -154,7 +163,7 @@ if(isset($_POST['remove'])){
    border-width: 3px ;
    margin-top:10px;
    width: 45%;
-
+   text-align: left;
    float: left;
   }
   </style>
@@ -173,7 +182,8 @@ if(isset($_POST['remove'])){
   </ul>
   
     <div class= "container">
-  <h1>Select Questions</h1><br>
+  <h1>Test Creation</h1><br>
+  </div>
   <div class ="split">
   <div class ="left">
   <table border = "1">
@@ -214,9 +224,7 @@ if(isset($_POST['remove'])){
       while($row = mysqli_fetch_assoc($qResult)){
         echo"<tr>
            <td>";
-        echo '<input type="checkbox" name="qSelection[]" value="' . $row['qID'] . '" ><br>'. $row['question'] .'<br></input>';
-        echo '<label for="scores">Points:</label><br>';
-        echo '<input type="text" name="scores[]" id="scores" />';
+        echo '<input type="checkbox" name="qSelection[]" value="' . $row['qID'] . '" ><p>'. $row['question'] .'</p></input>';
         echo '<input type= "hidden" name = "qText[]" value ="'. $row['question'] .'" />';
         echo"</td>
              </tr>";
@@ -229,12 +237,12 @@ if(isset($_POST['remove'])){
   </table>
   </div>
   <div class = "right">
-    <table>
+    <table border = "1">
     <form method = "POST">  
     <tr>
     <td> 
     <label for="testName">Test Name:</label><br>
-    <input type="text" id="testName" name="testName">
+    <input type="text" id="testName" name="testName"  >
     </tr>
     </td> 
     <?php
@@ -243,11 +251,14 @@ if(isset($_POST['remove'])){
     echo"<tr>
      <td>";
     $case = ($_SESSION['QuestionBank'][$i]);
-    echo '<input type="checkbox" name="tSelection[]" value= ' . $i . ' />'; 
+    echo '<input type="checkbox" name="tSelection[]" value= ' . $i . '  >'; 
     $case = ($_SESSION['QuestionBank'][$i]);
-    echo $case['text'];
-    echo ": ";
-    echo $case['points'];
+    (string) $question = $case['text'] ;
+    echo  '<p> '. addslashes($question) .'</p>' ;
+    
+
+    echo '<label for="scores">Points:</label><br>';
+    echo '<input type="text" name="scores[]" id="scores" size = "4" >';
     echo "<br>";
     echo"</td>
      </tr>";

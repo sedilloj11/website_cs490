@@ -47,16 +47,19 @@ session_start(); //Requiring sesssion to enter
     $allCases = [];
     $submittedCases = $_POST['case'];
     foreach($submittedCases as $case){
+    if($case){
     array_push($allCases, $case);
+    }
     }
     
     $allResult = [];
     $submittedResult = $_POST['result'];
     foreach($submittedResult as $result){
+    if($result){
     array_push($allResult, $result);
-    }
+    }}
     
-      $numOfCases = count($allCases); //Getting number of selected questions
+      $numOfCases = sizeof($allCases); //Getting number of selected questions
       $strOfCases = ""; //Declaring string for option information submission
       $strOfResults = "";
       for($j=0; $j<$numOfCases; $j++){
@@ -101,25 +104,45 @@ session_start(); //Requiring sesssion to enter
   textarea{
   width: 90%;
   }
+  
   p
   {
   background-color: white;
+    border-style: solid;
+  border-width: 1px ;
+  padding: 4px;
   }
-
+table{
+  table-layout: fixed;
+margin: auto;
+padding: 10px;
+text-align: left;
+overflow: auto;
+background-color: #b0aa8c;
+}
   .split 
   {
   margin:auto;
-  width: 80%;
+  padding: 15px;
+  width: 900px;
   overflow: auto;
+  border-style: solid;
+  border-width: 3px ;
+  background-color: white;
+    display: flex;
+  flex-wrap: wrap;
+  align-content: center;
 
 	
    }
    .left 
    {
    background-color: #b0aa8c;
-   width: 50%;
+   width: 400px;
    margin:10px;
    float: left;
+   border-style: solid;
+  border-width: 1px ;
     
 
    }
@@ -127,9 +150,11 @@ session_start(); //Requiring sesssion to enter
    .right 
    {
    background-color: #b0aa8c;
-   width: 45%;
+   width: 400px;
    margin:10px;
    float: left;
+   border-style: solid;
+  border-width: 1px ;
    
    }
   </style>
@@ -150,6 +175,7 @@ session_start(); //Requiring sesssion to enter
  
   <div class= "container">
     <h1>Please Enter Desired Question</h1>
+    </div>
       <div class = "split">
         <div class ="left">
       
@@ -289,7 +315,7 @@ session_start(); //Requiring sesssion to enter
             }
             ?>
           </table>
-      	</div>
+      
      </div>
    </div>
   

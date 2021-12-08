@@ -12,6 +12,36 @@ session_start(); //Requiring sesssion to enter
 <head>
   <title>Existing Tests</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  
+  <style>
+  
+  td{
+background-color: white;
+white-space: pre-wrap;
+
+}
+  table{
+table-layout: auto;
+margin: auto;
+padding: 10px;
+width: 400px;
+text-align: left;
+background-color: #b0aa8c;
+
+
+}
+    .view{
+    margin: auto;
+  background-color: white;
+  overflow: auto;
+  width: 700px;
+  border-style: solid;
+  border-width: 3px ;
+  padding: 10px ;
+ 
+  text-align: left;
+  }
+  </style>
 </head>
 
 <body>
@@ -28,9 +58,12 @@ session_start(); //Requiring sesssion to enter
     
   <div class = "container">
   <h1>Existing Tests</h1><br>
-  
-  <div class = "listDisplay">
+  </div>
+  <div class = "view">
+  <form method ="post"
+  <form method = "post">
   <?php 
+  
     //Retrieve all questions from the database
     $query = "SELECT * FROM CS490Tests";
     $qResult = mysqli_query($db,$query);
@@ -39,17 +72,54 @@ session_start(); //Requiring sesssion to enter
     if($qCheck > 0){
     
       while($row = mysqli_fetch_assoc($qResult)){
-        echo "• " . $row['tName'];
+         echo '<input type="checkbox" name="test_id[]" value= ' . $row['tID'] . '  >';
+
+        echo "<br>• " . $row['tName'];
         echo "<br><br>";
+        
+          $questions_raw = $row['tQuestions']; //Getting question string from database | Should only be 1 entry at this point
+          $scores_raw = $row['rScores'];
+          $test_information =  $row['tID']; //Getting test id information
+        
+        $questions = explode(",",$questions_raw); //Splitting the questions by delimeter
+        $scores = explode(",",$scores_raw);
+        
+        //Retrieve the questions from database
+        $counter = 1;
+        foreach($questions as $question){
+          //echo $question;
+          $query = "SELECT * FROM CS490Questions WHERE qID = '$question' ";
+          $qr =  mysqli_query($db,$query);
+          $cq = mysqli_num_rows($qr);
+          if ($cq > 0){
+            //If the query has returned an entries
+            echo '<table border = "1">';
+            $qRow = mysqli_fetch_assoc($qr);
+          
+            echo "<h3>". $counter . "</h3><tr><td><p>" . $qRow['question'] . "</p></td><td><p>". $scores[$counter-1] ."</p></td></tr>";
+           
+
+            
+            
+            $counter++;
+            
+          }else{
+            echo "Failed to retrieve question information";
+          }
+          
+        }
+        
+        
       }
     }
     else{
       echo "<br><br>There are currently no existing tests.<br>";
     }
   ?>
+<input type="submit" name="remove" value="remove">
+  </form>
+  </div>
   
-  </div>
-  </div>
   
 </body>
 </html>

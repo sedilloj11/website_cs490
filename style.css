@@ -5,9 +5,9 @@ body {
 
     .container{
   overflow: auto;
-  margin: 75px 50px 50px 50px;
+  margin: 75px auto;
   background-color: white;
-  width: 90%;
+  width: 100%;
   border-style: solid;
   border-width: 3px ;
   text-align: center;
@@ -21,8 +21,7 @@ body {
   width: 70%;
   margin: 40px auto auto auto;
   border-style: solid;
-  border-width: 3px;
-  background-color: lightgrey;
+  border-width: 1px;
   text-align: center;
 }
   form.takeTest{

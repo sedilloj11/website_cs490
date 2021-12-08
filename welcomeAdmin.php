@@ -5,6 +5,7 @@ session_start();
   include("functions.php"); //require file where functions are implemented
   
   $dataOfUser = isLoggedIn($db); //Check if the user is logged in and store its data into variable
+  $_SESSION['QuestionBank']  = array();
   
 ?>
 
