@@ -5,6 +5,32 @@ session_start(); //Requiring sesssion to enter
   include("functions.php"); //require file where functions are implemented
   
   $dataOfUser = isLoggedIn($db);//Check if the user is logged in and store its data into variable
+  
+  
+    if(isset($_POST['remove'])){
+		if(isset($_POST['test_id'])){
+			foreach($_POST['test_id'] as $testid){
+				$deleteTest1 = 'DELETE from CS490Tests WHERE tID="'. $testid .'"';
+				mysqli_query($db, $deleteTest1);
+				$deleteTest2 = 'DELETE from CS490Answers WHERE test_id="'. $testid .'"';
+				mysqli_query($db, $deleteTest2);
+				$deleteTest3 = 'DELETE from CS490ExamRecords WHERE test_name="'. $testid .'"';
+				mysqli_query($db, $deleteTest3);
+			}
+		}
+   
+   unset($_POST['remove']);
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 ?>
 
 <!DOCTYPE html>
