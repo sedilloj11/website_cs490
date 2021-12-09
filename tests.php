@@ -39,7 +39,7 @@ background-color: #b0aa8c;
   border-width: 3px ;
   padding: 10px ;
  
-  text-align: left;
+  //text-align: left;
   }
   </style>
 </head>
@@ -60,7 +60,7 @@ background-color: #b0aa8c;
   <h1>Existing Tests</h1><br>
   </div>
   <div class = "view">
-  <form method ="post"
+  
   <form method = "post">
   <?php 
   
@@ -72,10 +72,10 @@ background-color: #b0aa8c;
     if($qCheck > 0){
     
       while($row = mysqli_fetch_assoc($qResult)){
-         echo '<input type="checkbox" name="test_id[]" value= ' . $row['tID'] . '  >';
-
-        echo "<br>• " . $row['tName'];
-        echo "<br><br>";
+        echo '<table border = "1">';
+       
+        echo '<th><input type="checkbox" name="test_id[]" value= '. $row['tID'] .'  >' . $row['tName'] . '</th>';
+        
         
           $questions_raw = $row['tQuestions']; //Getting question string from database | Should only be 1 entry at this point
           $scores_raw = $row['rScores'];
@@ -93,10 +93,10 @@ background-color: #b0aa8c;
           $cq = mysqli_num_rows($qr);
           if ($cq > 0){
             //If the query has returned an entries
-            echo '<table border = "1">';
+            
             $qRow = mysqli_fetch_assoc($qr);
           
-            echo "<h3>". $counter . "</h3><tr><td><p>" . $qRow['question'] . "</p></td><td><p>". $scores[$counter-1] ."</p></td></tr>";
+            echo "<tr><td>". $counter . "</td><td><p>" . $qRow['question'] . "</p></td><td><p>". $scores[$counter-1] ."</p></td></tr>";
            
 
             
@@ -104,7 +104,7 @@ background-color: #b0aa8c;
             $counter++;
             
           }else{
-            echo "Failed to retrieve question information";
+           // echo "Failed to retrieve question information";
           }
           
         }
@@ -112,11 +112,11 @@ background-color: #b0aa8c;
         
       }
     }
-    else{
-      echo "<br><br>There are currently no existing tests.<br>";
-    }
+   
   ?>
-<input type="submit" name="remove" value="remove">
+   </table>
+  <input type="submit" name="remove" value="remove">
+  
   </form>
   </div>
   
