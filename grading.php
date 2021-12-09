@@ -109,7 +109,9 @@ background-color: #b0aa8c;
     <li><a href="manage.php">Grade Tests</a></li>
     <li><a href = "logout.php">Sign Out</a></li>
   </ul>
-  
+  <div class ="container">
+  <h1>Exam Grader</h1>
+  </div>
   
  <div class = "view">
   
@@ -257,15 +259,19 @@ background-color: #b0aa8c;
                   $correct = $correct + 1;
                 }
                 }
+            $PV =  ($point * $P[$c] - $d);
+            if($PV < 0){
+            $PV = 0;
+            }
         ///table contents
           
           echo "<tr>";
         
-          echo "<td>" . $question . "</td>";
+          echo "<td>". $question ."</td>";
         
-          echo "<td>" . $originalAnswer . "<br>---------------------------------<br>-". $correct ."/" . $caseCount . "<br>". $errs . "</td>";
+          echo "<td>". $originalAnswer ."<br>---------------------------------<br>-Cases[". $correct ."/". $caseCount ."]<br>". $errs . "</td>";
           
-          echo "<td><input type='text' id = 'points".$c."' name='points[]' maxlength = '3' size='3' value=" . ($point * $P[$c] - $d) ." ></td>";
+          echo "<td><input type='number' id = 'points".$c."' name='points[]' min = '0' max = '". $P[$c] ."' maxlength = '3' size='3' value=". $PV ." ></td>";
           echo"<input type='hidden'  name='Qid[]' value=". $Qid .">";
  
          
